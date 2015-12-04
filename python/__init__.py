@@ -2,8 +2,17 @@
 import base64
 import json
 import numpy
-import urllib.request
 import uuid
+import sys 
+version = sys.version_info
+if version.major == 2:
+  import urllib2
+  Request = urllib2.Request
+  urlopen = urllib2.urlopen
+else:
+  import urllib.request
+  Request = urllib.request.Request
+  urlopen = urllib.request.urlopen
 
 from . import png
 
@@ -18,11 +27,11 @@ def uid():
 
 def send(**command):
   command = json.dumps(command)
-  req = urllib.request.Request(URL, method='POST')
+  req = Request(URL, 'POST')
   req.add_header('Content-Type', 'application/text')
   req.data = command.encode('ascii')
   try:
-    resp = urllib.request.urlopen(req)
+    resp = urlopen(req)
     return resp != None
   except:
     raise
